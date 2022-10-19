@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Icodestuff\Mailytics\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class MailyticsCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-mailytics';
 
     public $description = 'My command';
 

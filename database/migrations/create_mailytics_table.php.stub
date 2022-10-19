@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('laravel_mailytics_table', function (Blueprint $table) {
+            $table->uuid('id')->unique();
+            $table->string('subject');
+            $table->json('sender');
+            $table->json('recipients');
+            $table->json('ccs')->nullable();
+            $table->json('bccs')->nullable();
+            $table->string('image_signature')->unique();
+            $table->timestamp('seen_at')->nullable();
+            $table->timestamp('sent_at');
+        });
+    }
+};
