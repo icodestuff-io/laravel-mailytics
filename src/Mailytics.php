@@ -77,7 +77,7 @@ class Mailytics
         return "mailytics::generated.$view";
     }
 
-    private function generateMailyticsTemplate(string $viewPath)
+    public function generateMailyticsTemplate(string $viewPath)
     {
         $fileName = Str::random().'.blade.php';
         $cachedFilePath = resource_path("views/vendor/mailytics/generated/$fileName");
@@ -85,17 +85,17 @@ class Mailytics
         // copy view path to new file name
         copy($viewPath, $cachedFilePath);
 
-        $pixel = $this->generateMailyticsPixel();
-        file_put_contents($cachedFilePath, $pixel, FILE_APPEND);
+        // Inject Component into cached file
+        file_put_contents($cachedFilePath, '<x-mailytics::image-signature :url="$mailytics_url"/>', FILE_APPEND);
 
         return $fileName;
     }
 
-    private function generateMailyticsPixel(): string
+    public function generateImageSignatureFile(): string
     {
         $this->filesystem->ensureDirectoryExists(storage_path('app/public/mailytics/'));
         $imageSignature = Str::uuid().'.jpg';
-        $created = copy(dirname('', 2).'pixel.png', storage_path("app/public/mailytics/$imageSignature"));
+        $created = copy(dirname(__DIR__) .'/pixel.png', storage_path("app/public/mailytics/$imageSignature"));
 
         if (! $created) {
             throw new \Exception('Failed to create image signature');

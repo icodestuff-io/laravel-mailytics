@@ -11,13 +11,6 @@ class Mailytics extends Model
     use HasFactory;
 
     /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
@@ -33,7 +26,7 @@ class Mailytics extends Model
     {
         parent::boot();
         self::creating(function ($model) {
-            $model->id = Str::uuid();
+            $model->uuid = Str::uuid()->toString();
         });
     }
 
@@ -43,6 +36,8 @@ class Mailytics extends Model
      * @var array<string>
      */
     protected $fillable = [
+        'uuid',
+        'mailable_class',
         'subject',
         'sender',
         'recipients',

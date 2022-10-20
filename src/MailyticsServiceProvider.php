@@ -3,7 +3,6 @@
 namespace Icodestuff\Mailytics;
 
 use Icodestuff\Mailytics\Commands\MailyticsCommand;
-use Icodestuff\Mailytics\View\Components\ImageSignature;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -20,8 +19,6 @@ class MailyticsServiceProvider extends PackageServiceProvider
             ->name('laravel-mailytics')
             ->hasConfigFile('mailytics')
             ->hasViews('mailytics')
-            ->hasViews()
-            ->hasViewComponent('mailytics', ImageSignature::class)
             ->hasMigration('create_mailytics_table')
             ->hasRoute('web')
             ->hasCommand(MailyticsCommand::class);

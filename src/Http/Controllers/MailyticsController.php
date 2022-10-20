@@ -3,6 +3,7 @@
 namespace Icodestuff\Mailytics\Http\Controllers;
 
 use Icodestuff\Mailytics\Jobs\ViewedEmail;
+use Icodestuff\Mailytics\Models\Mailytics;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
@@ -28,5 +29,17 @@ class MailyticsController
         $response->header('Content-Type', $type);
 
         return $response;
+    }
+
+    public function dashboard()
+    {
+        $sentCount = Mailytics::count();
+        $openRate = Mailytics::whereNotNull('seen_at')->count();
+
+        return view('mailytics::dashboard', [
+            'sent_count' => $sentCount,
+            'open_rate' => number_format($openRate/$sentCount * 100, 2),
+            'click_rate' => number_format($openRate/$sentCount * 100, 2),
+        ]);
     }
 }

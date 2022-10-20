@@ -9,7 +9,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('laravel_mailytics_table', function (Blueprint $table) {
-            $table->uuid('id')->unique();
+            $table->id();
+            $table->uuid()->unique();
             $table->string('subject');
             $table->json('sender');
             $table->json('recipients');

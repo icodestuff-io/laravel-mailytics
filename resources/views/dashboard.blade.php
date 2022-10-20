@@ -14,17 +14,17 @@
         <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">Emails Sent</dt>
-                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">71,897</dd>
+                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{$sent_count}}</dd>
             </div>
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">Open Rate</dt>
-                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">58.16%</dd>
+                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{$open_rate}}%</dd>
             </div>
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">Click Rate</dt>
-                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{$open_rate}}%</dd>
             </div>
         </dl>
     </div>
