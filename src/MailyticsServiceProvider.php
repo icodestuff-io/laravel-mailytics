@@ -2,10 +2,10 @@
 
 namespace Icodestuff\Mailytics;
 
+use Icodestuff\Mailytics\Commands\MailyticsCommand;
 use Icodestuff\Mailytics\View\Components\ImageSignature;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Icodestuff\Mailytics\Commands\MailyticsCommand;
 
 class MailyticsServiceProvider extends PackageServiceProvider
 {

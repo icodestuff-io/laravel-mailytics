@@ -2,9 +2,9 @@
 
 namespace Icodestuff\Mailytics\Tests;
 
+use Icodestuff\Mailytics\MailyticsServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Icodestuff\Mailytics\MailyticsServiceProvider;
 
 class TestCase extends Orchestra
 {

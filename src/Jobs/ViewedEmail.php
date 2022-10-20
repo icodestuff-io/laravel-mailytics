@@ -2,17 +2,15 @@
 
 namespace Icodestuff\Mailytics\Jobs;
 
-use App\Models\Mailytics;
+use Icodestuff\Mailytics\Models\Mailytics;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
-class TrackEmailView implements ShouldQueue
+class ViewedEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -39,6 +37,7 @@ class TrackEmailView implements ShouldQueue
         $mailytics->update(['seen_at' => now()]);
 
         // Delete image signature
+        File::ensureDirectoryExists(storage_path('app/public/mailytics/'));
         File::delete(storage_path("app/public/mailytics/$this->imageSignature"));
     }
 }
