@@ -60,4 +60,23 @@ class Mailytics extends Model
         'sent_at' => 'datetime',
         'seen_at' => 'datetime',
     ];
+
+    public function scopeFilter($query, $period = 'today')
+    {
+        if ($period === 'all_time') {
+            return $query;
+        }
+
+        if (! in_array($period, ['today', 'yesterday'])) {
+            [$interval, $unit] = explode('_', $period);
+
+            return $query->where('sent_at', '>=', now()->sub($unit, $interval));
+        }
+
+        if ($period === 'yesterday') {
+            return $query->whereDate('sent_at', today()->subDay()->toDateString());
+        }
+
+        return $query->whereDate('sent_at', today());
+    }
 }
