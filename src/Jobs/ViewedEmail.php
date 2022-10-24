@@ -31,7 +31,7 @@ class ViewedEmail implements ShouldQueue
      */
     public function handle()
     {
-        $mailytics = Mailytics::where('image_signature', '=', $this->imageSignature)->firstOrFail();
+        $mailytics = Mailytics::where('pixel', '=', $this->imageSignature)->firstOrFail();
 
         // Update Mailytics
         $mailytics->update(['seen_at' => now()]);

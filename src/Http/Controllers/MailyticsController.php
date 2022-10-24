@@ -4,27 +4,31 @@ namespace Icodestuff\Mailytics\Http\Controllers;
 
 use Icodestuff\Mailytics\Jobs\ViewedEmail;
 use Icodestuff\Mailytics\Models\Mailytics;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
-class MailyticsController
+class MailyticsController extends Controller
 {
+    use ValidatesRequests;
     /** @var string */
     protected $period;
 
-    public function showImageSignature($imageSignature)
+    public function trackView($pixel, Request $request)
     {
-        if (! request()->hasValidSignature()) {
+        if (! $request->hasValidSignature()) {
             abort(404);
         }
 
-        $path = storage_path('app/public/mailytics/'.$imageSignature);
+        $path = storage_path('app/public/mailytics/'.$pixel);
         if (! File::exists($path)) {
             abort(404);
         }
 
-        ViewedEmail::dispatch($imageSignature);
+        ViewedEmail::dispatch($pixel);
 
         // Mark as Seen
         $file = File::get($path);
@@ -33,6 +37,24 @@ class MailyticsController
         $response->header('Content-Type', $type);
 
         return $response;
+    }
+
+    public function trackClick($pixel, Request $request)
+    {
+        $this->validate($request, [
+            'redirect_uri' => ['required'],
+            'pixel' => ['required', 'string']
+        ]);
+
+        dd($request->get('redirect_uri'));
+
+        if ($request->hasValidSignature()) {
+            $mailytics = Mailytics::where('pixel', '=', $pixel)->first();
+
+        }
+
+
+        return redirect($request->get('redirect_uri', '/'));
     }
 
     public function dashboard()

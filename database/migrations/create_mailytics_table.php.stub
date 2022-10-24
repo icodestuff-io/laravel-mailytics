@@ -8,17 +8,23 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('laravel_mailytics_table', function (Blueprint $table) {
+        Schema::create('mailytics', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
             $table->string('subject');
-            $table->json('sender');
+            $table->string('mailable_class');
             $table->json('recipients');
             $table->json('ccs')->nullable();
             $table->json('bccs')->nullable();
-            $table->string('image_signature')->unique();
+            $table->string('pixel')->unique();
             $table->timestamp('seen_at')->nullable();
+            $table->timestamp('clicked_at')->nullable();
             $table->timestamp('sent_at');
         });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('mailytics');
     }
 };

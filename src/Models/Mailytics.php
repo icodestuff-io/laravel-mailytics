@@ -39,13 +39,13 @@ class Mailytics extends Model
         'uuid',
         'mailable_class',
         'subject',
-        'sender',
         'recipients',
         'ccs',
         'bccs',
-        'image_signature',
+        'pixel',
         'seen_at',
         'sent_at',
+        'clicked_at',
     ];
 
     /**
@@ -59,6 +59,7 @@ class Mailytics extends Model
         'bccs' => 'collection',
         'sent_at' => 'datetime',
         'seen_at' => 'datetime',
+        'clicked_at' => 'datetime',
     ];
 
     public function scopeFilter($query, $period = 'today')

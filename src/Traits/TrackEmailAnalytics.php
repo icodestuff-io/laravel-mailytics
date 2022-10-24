@@ -3,9 +3,7 @@
 namespace Icodestuff\Mailytics\Traits;
 
 use Icodestuff\Mailytics\Models\Mailytics;
-use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
 
 trait TrackEmailAnalytics
 {
@@ -18,21 +16,16 @@ trait TrackEmailAnalytics
      */
     public function buildViewData()
     {
-        /** @var \Icodestuff\Mailytics\Mailytics $mailytics */
-        $mailytics = app(\Icodestuff\Mailytics\Mailytics::class);
-        $imageSignature = $mailytics->generateImageSignatureFile();
-        $url = URL::signedRoute('mailytics.signature', ['imageSignature' => $imageSignature]);
-        $this->viewData['mailytics_url'] = $url;
-
-        Mailytics::create([
-            'mailable_class' => self::class,
-            'image_signature' => $imageSignature,
-            'recipients' => $this->to,
-            'ccs' => $this->cc,
-            'bccs' => $this->bcc,
-            'sent_at' => now(),
-            'subject' => $this->subject,
-        ]);
+        if (isset($this->viewData['mailytics_pixel'], $this->viewData['mailytics_url'])) {
+            Mailytics::updateOrCreate(['pixel' => $this->viewData['mailytics_pixel']], [
+                'mailable_class' => self::class,
+                'recipients' => $this->to,
+                'ccs' => $this->cc,
+                'bccs' => $this->bcc,
+                'sent_at' => now(),
+                'subject' => $this->subject,
+            ]);
+        }
 
         return parent::buildViewData();
     }
@@ -49,7 +42,11 @@ trait TrackEmailAnalytics
         /** @var \Icodestuff\Mailytics\Mailytics $mailytics */
         $mailytics = app(\Icodestuff\Mailytics\Mailytics::class);
 
-        $compiledView = $mailytics->compile($view);
+        $pixel = $mailytics->generateImageSignatureFile();
+        $data['mailytics_pixel'] = $pixel;
+        $data['mailytics_url'] = route('mailytics.viewed', ['pixel' => $pixel]);
+
+        $compiledView = $mailytics->compile($view, $pixel);
 
         return parent::view($compiledView, $data);
     }
@@ -66,7 +63,11 @@ trait TrackEmailAnalytics
         /** @var \Icodestuff\Mailytics\Mailytics $mailytics */
         $mailytics = app(\Icodestuff\Mailytics\Mailytics::class);
 
-        $compiledView = $mailytics->compile($view);
+        $pixel = $mailytics->generateImageSignatureFile();
+        $data['mailytics_pixel'] = $pixel;
+        $data['mailytics_url'] = URL::signedRoute('mailytics.viewed', ['pixel' => $pixel]);
+
+        $compiledView = $mailytics->compile($view, $pixel);
 
         return parent::markdown($compiledView, $data);
     }

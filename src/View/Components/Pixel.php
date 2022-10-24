@@ -4,7 +4,7 @@ namespace Icodestuff\Mailytics\View\Components;
 
 use Illuminate\View\Component;
 
-class ImageSignature extends Component
+class Pixel extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class ImageSignature extends Component
      */
     public function render()
     {
-        return view('components.image-signature');
+        return view('components.pixel');
     }
 }
