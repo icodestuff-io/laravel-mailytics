@@ -42,7 +42,7 @@ trait TrackEmailAnalytics
         /** @var \Icodestuff\Mailytics\Mailytics $mailytics */
         $mailytics = app(\Icodestuff\Mailytics\Mailytics::class);
 
-        $pixel = $mailytics->generateImageSignatureFile();
+        $pixel = $mailytics->generateImagePixelFile();
         $data['mailytics_pixel'] = $pixel;
         $data['mailytics_url'] = route('mailytics.viewed', ['pixel' => $pixel]);
 
@@ -63,7 +63,7 @@ trait TrackEmailAnalytics
         /** @var \Icodestuff\Mailytics\Mailytics $mailytics */
         $mailytics = app(\Icodestuff\Mailytics\Mailytics::class);
 
-        $pixel = $mailytics->generateImageSignatureFile();
+        $pixel = $mailytics->generateImagePixelFile();
         $data['mailytics_pixel'] = $pixel;
         $data['mailytics_url'] = URL::signedRoute('mailytics.viewed', ['pixel' => $pixel]);
 

@@ -144,16 +144,16 @@ class Mailytics
      * @return string
      * @throws \Exception
      */
-    public function generateImageSignatureFile(): string
+    public function generateImagePixelFile(): string
     {
         $this->filesystem->ensureDirectoryExists(storage_path('app/public/mailytics/'));
-        $imageSignature = Str::uuid().'.jpg';
-        $created = copy(dirname(__DIR__).'/pixel.png', storage_path("app/public/mailytics/$imageSignature"));
+        $pixel = Str::uuid().'.jpg';
+        $created = copy(dirname(__DIR__).'/pixel.png', storage_path("app/public/mailytics/$pixel"));
 
         if (! $created) {
             throw new \Exception('Failed to create image signature');
         }
 
-        return $imageSignature;
+        return $pixel;
     }
 }

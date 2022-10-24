@@ -19,7 +19,7 @@ class ViewedEmail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(public string $imageSignature)
+    public function __construct(public string $pixel)
     {
         //
     }
@@ -31,13 +31,9 @@ class ViewedEmail implements ShouldQueue
      */
     public function handle()
     {
-        $mailytics = Mailytics::where('pixel', '=', $this->imageSignature)->firstOrFail();
+        $mailytics = Mailytics::where('pixel', '=', $this->pixel)->firstOrFail();
 
         // Update Mailytics
         $mailytics->update(['seen_at' => now()]);
-
-        // Delete image signature
-        File::ensureDirectoryExists(storage_path('app/public/mailytics/'));
-        File::delete(storage_path("app/public/mailytics/$this->imageSignature"));
     }
 }
