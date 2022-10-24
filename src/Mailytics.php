@@ -22,9 +22,8 @@ class Mailytics
     }
 
     /**
-     * @param string $viewName
-     * @param string $pixel
-     *
+     * @param  string  $viewName
+     * @param  string  $pixel
      * @return string
      *
      * @throws \Illuminate\View\ViewException
@@ -76,9 +75,8 @@ class Mailytics
     }
 
     /**
-     * @param string $viewPath
-     * @param string $pixel
-     *
+     * @param  string  $viewPath
+     * @param  string  $pixel
      * @return string
      */
     public function generateMailyticsTemplate(string $viewPath, string $pixel): string
@@ -90,50 +88,49 @@ class Mailytics
         file_put_contents($cachedFilePath, $fileContent);
 
         // Inject Component into cached file
-        file_put_contents($cachedFilePath, '<x-mailytics::image-signature :url="$mailytics_url"/>', FILE_APPEND);
+        file_put_contents($cachedFilePath, '<x-mailytics::pixel :url="$mailytics_url"/>', FILE_APPEND);
 
         return $fileName;
     }
 
     /**
-     * @param string $fileContent
-     * @param string $pixel
-     *
+     * @param  string  $fileContent
+     * @param  string  $pixel
      * @return array|string|string[]|null
      */
     private function sanitizeURLs(string $fileContent, string $pixel): array|string|null
     {
         // Sanitize anchor tags using double quotes. E.g. <a href="https://example.com">example</a>
-        $fileContent = preg_replace_callback('/href="([^"]*)"/',function ($match) use ($pixel){
+        $fileContent = preg_replace_callback('/href="([^"]*)"/', function ($match) use ($pixel) {
             $url = route('mailytics.clicked', [
-                'pixel' => $pixel
+                'pixel' => $pixel,
             ]);
 
             return "href=\"$url?redirect_uri=$match[1]\" ";
         }, $fileContent);
 
         // Sanitize blade url using double quotes. E.g. <x-mail::button :url="https://stackoverflow.com">View</x-mail::button>
-        $fileContent = preg_replace_callback('/:url="([^"]*)"/', function ($match) use ($pixel){
+        $fileContent = preg_replace_callback('/:url="([^"]*)"/', function ($match) use ($pixel) {
             $url = route('mailytics.clicked', [
-                'pixel' => $pixel
+                'pixel' => $pixel,
             ]);
 
             return ":url=\"$url?redirect_uri=$match[1]\"";
         }, $fileContent);
 
         // Sanitize anchor tags using single quotes. E.g. <a href='https://example.com'>example</a>
-        $fileContent = preg_replace_callback('/href=\'([^"]*)\'/',function ($match) use ($pixel){
+        $fileContent = preg_replace_callback('/href=\'([^"]*)\'/', function ($match) use ($pixel) {
             $url = route('mailytics.clicked', [
-                'pixel' => $pixel
+                'pixel' => $pixel,
             ]);
 
             return "href='$url?redirect_uri=$match[1]'";
         }, $fileContent);
 
         // Sanitize blade url using double quotes. E.g. <x-mail::button :url='https://stackoverflow.com'>View</x-mail::button>
-        return preg_replace_callback('/:url=\'([^"]*)\'/', function ($match) use ($pixel){
+        return preg_replace_callback('/:url=\'([^"]*)\'/', function ($match) use ($pixel) {
             $url = route('mailytics.clicked', [
-                'pixel' => $pixel
+                'pixel' => $pixel,
             ]);
 
             return ":url='$url?redirect_uri=$match[1]'";
@@ -142,6 +139,7 @@ class Mailytics
 
     /**
      * @return string
+     *
      * @throws \Exception
      */
     public function generateImagePixelFile(): string

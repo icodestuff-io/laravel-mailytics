@@ -2,6 +2,7 @@
 
 namespace Icodestuff\Mailytics\Http\Controllers;
 
+use Icodestuff\Mailytics\Jobs\ClickedEmail;
 use Icodestuff\Mailytics\Jobs\ViewedEmail;
 use Icodestuff\Mailytics\Models\Mailytics;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -14,15 +15,12 @@ use Illuminate\Support\Facades\Response;
 class MailyticsController extends Controller
 {
     use ValidatesRequests;
+
     /** @var string */
     protected $period;
 
     public function trackView($pixel, Request $request)
     {
-        if (! $request->hasValidSignature()) {
-            abort(404);
-        }
-
         $path = storage_path('app/public/mailytics/'.$pixel);
         if (! File::exists($path)) {
             abort(404);
@@ -43,16 +41,9 @@ class MailyticsController extends Controller
     {
         $this->validate($request, [
             'redirect_uri' => ['required'],
-            'pixel' => ['required', 'string']
         ]);
 
-        dd($request->get('redirect_uri'));
-
-        if ($request->hasValidSignature()) {
-            $mailytics = Mailytics::where('pixel', '=', $pixel)->first();
-
-        }
-
+        ClickedEmail::dispatch($pixel);
 
         return redirect($request->get('redirect_uri', '/'));
     }
@@ -78,27 +69,27 @@ class MailyticsController extends Controller
             'sent_emails' => [
                 'count' => $sentEmailCount,
                 'labels' => $sentEmailChart->pluck('sent_email_labels')->toArray(),
-                'data' => $sentEmailChart->pluck('sent_email_data')->toArray()
+                'data' => $sentEmailChart->pluck('sent_email_data')->toArray(),
             ],
             'open_rate' => [
-                'percentage' => number_format($openRateChart->count() / $sentEmailCount* 100, 2),
+                'percentage' => number_format($openRateChart->count() / $sentEmailCount * 100, 2),
                 'labels' => $openRateChart->pluck('open_rate_labels')->toArray(),
-                'data' => $openRateChart->pluck('open_rate_data')->toArray()
+                'data' => $openRateChart->pluck('open_rate_data')->toArray(),
             ],
             'click_rate' => 0,
             'periods' => $this->periods(),
-            'period' => $this->period
+            'period' => $this->period,
         ]);
     }
 
     protected function periods(): array
     {
         return [
-            'today'     => 'Today',
+            'today' => 'Today',
             'yesterday' => 'Yesterday',
-            '1_week'    => 'Last 7 days',
-            '30_days'   => 'Last 30 days',
-            '6_months'  => 'Last 6 months',
+            '1_week' => 'Last 7 days',
+            '30_days' => 'Last 30 days',
+            '6_months' => 'Last 6 months',
             '12_months' => 'Last 12 months',
             'all_time' => 'All Time',
         ];

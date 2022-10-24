@@ -3,7 +3,6 @@
 namespace Icodestuff\Mailytics\Traits;
 
 use Icodestuff\Mailytics\Models\Mailytics;
-use Illuminate\Support\Facades\URL;
 
 trait TrackEmailAnalytics
 {
@@ -65,7 +64,7 @@ trait TrackEmailAnalytics
 
         $pixel = $mailytics->generateImagePixelFile();
         $data['mailytics_pixel'] = $pixel;
-        $data['mailytics_url'] = URL::signedRoute('mailytics.viewed', ['pixel' => $pixel]);
+        $data['mailytics_url'] = route('mailytics.viewed', ['pixel' => $pixel]);
 
         $compiledView = $mailytics->compile($view, $pixel);
 
